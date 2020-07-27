@@ -7,7 +7,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
+import java.util.ArrayList;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -55,12 +58,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onNext(Response response) {
                         ResponseBody body = response.body();
                         if (body != null) {
-                            try {
-                                Toast.makeText(getApplicationContext(), body.string(), Toast.LENGTH_SHORT)
-                                        .show();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            showFirstPersonName(body);
                         }
                     }
 
@@ -74,6 +72,20 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    private void showFirstPersonName(ResponseBody body) {
+        try {
+            String wrapperJson = body.string();
+            Wrapper wrapper = new Gson().fromJson(wrapperJson, Wrapper.class);
+            ArrayList<Person> people = wrapper.getData();
+            if (people != null && people.size() > 0) {
+                Toast.makeText(getApplicationContext(), people.get(0).getName(), Toast.LENGTH_SHORT)
+                        .show();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void getInternetData(ObservableEmitter<Response> emitter) throws IOException {
