@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">OkHttpAndRxJavaExample</string>
+    <string name="get_data_btn_text">Get Data</string>
+</resources>
